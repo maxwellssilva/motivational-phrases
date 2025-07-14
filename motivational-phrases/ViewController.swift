@@ -44,6 +44,22 @@ class ViewController: UIViewController {
         setupLayout()
     }
     
+    func fetchDataAPI() {
+        NetworkManager.shared.fetchData(from: "https://docapi.dev/books/api-de-frases/page/obter-todas") { (result: Result<[Quote], APIError) in
+            switch result {
+            case .success(let quotes):
+                print("Frases recebidas com sucesso!")
+                for quote in quotes {
+                    print("Quote: \(quote.quote)")
+                    print("Author: \(quote.author)")
+                    print("---")
+                }
+            case .failure(let error):
+                print("Erro ao buscar frases: \(error.localizedDescription)")
+            }
+        }
+    }
+    
     private func setupLayout() {
         view.addSubview(logoImage)
         view.addSubview(phraseLabel)
