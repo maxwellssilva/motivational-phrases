@@ -25,12 +25,13 @@ class ViewController: UIViewController {
         button.backgroundColor = .systemGreen
         button.layer.cornerRadius = 12
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(newPhraseButtonTapped), for: .touchUpInside)
         return button
     }()
     
     private lazy var phraseLabel: UILabel = {
         let phrase = UILabel()
-        phrase.text = "Frase do dia"
+        phrase.text = "Carregando frase..."
         phrase.numberOfLines = 0
         phrase.textAlignment = .center
         phrase.font = UIFont(name: "HelveticaNeue-CondensedBlack", size: 30)
@@ -42,22 +43,14 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupLayout()
+        fetchDataAPI()
     }
     
     func fetchDataAPI() {
-        NetworkManager.shared.fetchData(from: "https://docapi.dev/books/api-de-frases/page/obter-todas") { (result: Result<[Quote], APIError) in
-            switch result {
-            case .success(let quotes):
-                print("Frases recebidas com sucesso!")
-                for quote in quotes {
-                    print("Quote: \(quote.quote)")
-                    print("Author: \(quote.author)")
-                    print("---")
-                }
-            case .failure(let error):
-                print("Erro ao buscar frases: \(error.localizedDescription)")
-            }
-        }
+    }
+    
+    @objc private func newPhraseButtonTapped() {
+        fetchDataAPI()
     }
     
     private func setupLayout() {
@@ -77,6 +70,4 @@ class ViewController: UIViewController {
             phraseLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
     }
-
 }
-
